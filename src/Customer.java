@@ -1,18 +1,17 @@
 
-import java.util.Vector;
-import java.util.Enumeration;
+import java.util.*;
 
 public class Customer 
 {
 	private final String name;
-	private Vector rentals = new Vector ();
+	private final List rentals = new ArrayList();
 
 	public Customer (String name) {
 		this.name = name;
 	}
 	
 	public void addRental (Rental rental) {
-		rentals.addElement ((Object)rental);
+		rentals.add ((Object)rental);
 	}
 	
 	public String getName () {
@@ -23,12 +22,12 @@ public class Customer
 		double 				totalAmount 			= 0;
 		int					frequentRenterPoints 	= 0;
 		String 				result 					= "Rental Record for " + getName () + "\n";
-		Enumeration 		rentals 				= this.rentals.elements ();
 
-		while (rentals.hasMoreElements ()) {
+		Iterator<Rental> rentals = this.rentals.iterator();
+		while (rentals.hasNext ()) {
 			double 		thisAmount = 0;
-			Rental 		each = (Rental)rentals.nextElement ();
-			
+			Rental 		each = (Rental)rentals.next();
+
 			// determines the amount for each line
 			switch (each.getMovie ().getPriceCode ()) {
 				case Movie.REGULAR:
@@ -45,17 +44,17 @@ public class Customer
 						thisAmount += (each.getDaysRented () - 3) * 1.5;
 					break;
 			}
-			
+
 			frequentRenterPoints++;
-			
-			if (each.getMovie ().getPriceCode () == Movie.NEW_RELEASE 
+
+			if (each.getMovie ().getPriceCode () == Movie.NEW_RELEASE
 					&& each.getDaysRented () > 1)
 				frequentRenterPoints++;
-				
+
 			result += "\t" + each.getMovie ().getTitle () + "\t"
 								+ String.valueOf (thisAmount) + "\n";
 			totalAmount += thisAmount;
-				
+
 		}
 		
 		result += "You owed " + String.valueOf (totalAmount) + "\n";
